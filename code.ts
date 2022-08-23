@@ -3,46 +3,31 @@ function runPlugin() {
 }
 
 function getSelected() {
-  let selectedElement: any = figma.currentPage.selection[0];
+  let selectedElements: any = figma.currentPage.selection;
 
-  let objeto1 = {
-    name: selectedElement.name,
-    children: selectedElement.children
-  }
-
-  let customStyles = objeto1.children.map(node => {
-    let styles = {
-      darkTheme: node.variantProperties['Dark Theme'],
-      state: node.variantProperties.State,
-      type: node.variantProperties.Type,
-      children: node.children
+  return selectedElements.map((node, index) => {
+    let nodeData: NodeData = {
+      id: (index + 1),
+      type: node.children[0]?.name || '',
+      params: {
+        content: {
+          title: node.children[0]?.children[0]?.characters || '',
+          fontSize: node.children[0]?.children[0]?.fontSize || '',
+          fontWeight: node.children[0]?.children[0]?.fontWeight || '',
+          fontName: node.children[0]?.children[0]?.fontName || ''
+        },
+        actions: {
+          send: ''
+        },
+        styles: {
+          darkTheme: node.variantProperties['Dark Theme'],
+          type: node.variantProperties.Type,
+          state: node.variantProperties.State,
+        }
+      }
     }
-    return styles;
+    // test();
+    return nodeData;
   })
-
-  let colorStyle = customStyles.map(node => {
-    let colores = {
-      color: node.children[0].backgrounds[0].color,
-      opacity: node.children[0].backgrounds[0].opacity
-    }
-    return colores;
-  })
-
-  let stylesArray = [];
-
-  for (let i = 0; i < objeto1.children.length; i++) {
-    let stylesData = {
-      name: objeto1.name,
-      darkTheme: customStyles[i].darkTheme,
-      type: customStyles[i].type,
-      state: customStyles[i].state,
-      color: colorStyle[i].color,
-      opacity: colorStyle[i].opacity
-    }
-    stylesArray.push(stylesData)
-  }
-
-  return selectedElement;
 }
-
 runPlugin();
