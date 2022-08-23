@@ -5,6 +5,13 @@ function runPlugin() {
 function getSelected() {
   let selectedElements: any = figma.currentPage.selection;
 
+  figma.showUI(__html__, { visible: true })
+  figma.ui.postMessage({ type: 'networkRequest' })
+
+  figma.ui.onmessage = async (data) => {
+    console.log(data);
+  }
+
   return selectedElements.map((node, index) => {
     let nodeData: NodeData = {
       id: (index + 1),

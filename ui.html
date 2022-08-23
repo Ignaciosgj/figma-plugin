@@ -1,5 +1,13 @@
 <h2>UI</h2>
 
 <script>
-
+  window.onmessage = async (event) => {
+    if (event.data.pluginMessage.type === 'networkRequest') {
+      console.log('DATA: ', event.data.pluginMessage.data)
+      fetch('https://jsonplaceholder.typicode.com/posts/1')
+        .then((response) => response.json())
+        .then((json) => window.parent.postMessage({ pluginMessage: json }, '*'))
+        .catch((error) => console.log(error))
+    }
+  }
 </script>
